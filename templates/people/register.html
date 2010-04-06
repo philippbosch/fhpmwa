@@ -1,0 +1,44 @@
+{% load uni_form_tags %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>FHP Mobile Web Apps SS 2010</title>
+    <style type="text/css">
+        body {
+            font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
+            font-size: 85%;
+            margin: 48px;
+        }
+        .ctrlHolder {
+            color: #666;
+        }
+        .ctrlHolder > label {
+            color: #000;
+        }
+        .required > label {
+            font-weight: bold;
+        }
+        label span {
+            opacity: 0.4;
+        }
+        form ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
+    {% uni_form_setup %}
+</head>
+
+<body>
+    <form method="POST" action="" enctype="multipart/form-data" class="uniForm">
+    {{ error }}
+    {{ form|as_uni_form }}
+    <button type="submit">Save</button>
+    </form>
+</body>
+
+</html>

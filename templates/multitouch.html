@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>fhp_mwa :: touch events</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="/media/css/reset.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/media/css/iphone.css" />
+    <style type="text/css">
+        * {
+            -webkit-user-select: none;
+        }
+        html, body {
+            height: 100%;
+        }
+        body {
+        }
+        #container {
+            width: 100%;
+            height: 100%;
+            overflow: scroll;
+        }
+        #foo {
+            width: 100%;
+            height: 100%;
+            background: rgba(0,255,0,.3);
+        }
+    </style>
+    <link rel="apple-touch-icon-precomposed" href="/media/img/touch-icon.png" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <script type="text/javascript" src="/media/js/lib/jquery.js"></script>
+    <script type="text/javascript">
+        function log(m) {
+            $('#foo').prepend('<p>' + m + '</p>');
+        }
+        
+        $(document).ready(function() {
+            $('#container').bind('touchmove', function(e) {
+                e.preventDefault();
+            });
+            
+            $('#foo').bind('touchstart', function(e) {
+                log('START: ' + event.touches.length);
+            }).bind('touchmove', function(e) {
+                log('MOVE: ' + event.touches.length);
+            }).bind('touchend', function(e) {
+                log('END: ' + event.touches.length);
+            }).bind('touchcancel', function(e) {
+                log('CANCEL: ' + event.touches.length);
+            }).bind('mousewheel', function(e) {
+                log('MOUSEWHEEL: ' + event.touches.length);
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="foo"></div>
+    </div>
+</body>
+</html>

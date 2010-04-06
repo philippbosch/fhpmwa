@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>fhp_mwa</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="/media/css/reset.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/media/css/iphone.css" />
+    <link rel="apple-touch-icon-precomposed" href="/media/img/touch-icon.png" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <script type="text/javascript" src="/media/js/iscroll.js"></script>
+    <script type="text/javascript">
+        window.onload = function() { setTimeout(function(){ new iScroll(document.getElementById('scroller')) }, 100) };
+    </script>
+</head>
+
+<body>
+    <div id="index" class="fixed-toolbar">
+        <div class="toolbar">
+            <h1>Mobile Web Apps</h1>
+        </div>
+        <div id="content">
+            <ul class="rounded" id="scroller">
+                <li class="arrow"><a href="#people">Kursteilnehmer</a></li>
+                <li class="arrow"><a href="#projects">Projekte</a></li>
+                <li class="arrow"><a href="#demos">Demos</a></li>
+                <li class="arrow"><a href="#infos">Informationen</a></li>
+            </ul>
+        </div>
+        <div class="info" id="add-to-home-screen-hint">
+            <p>Add this page to your home screen to view the custom icon, startup screen, and full screen mode.</p>
+        </div>
+    </div>
+</body>
+</html>

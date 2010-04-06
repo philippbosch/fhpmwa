@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>fhp_mwa</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="/media/jqtouch/jqtouch.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/media/themes/apple/theme.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/media/css/master.css" />
+    <link rel="apple-touch-icon-precomposed" href="/media/img/touch-icon.png" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    {# <meta name="apple-mobile-web-app-status-bar-style" content="black" /> #}
+    <script type="text/javascript" src="/media/jqtouch/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="/media/jqtouch/jqtouch.js"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+    <script type="text/javascript">
+        var jQT = new $.jQTouch({
+        });
+        
+        $(document).ready(function() {
+            // SETUP MAP/GEOCODER
+            var geocoder = new google.maps.Geocoder();
+            
+            // POPULATE PEOPLE DATA
+            $.ajax({
+                'url': '/people/',
+                'type': 'GET',
+                'success': function(data) {
+                    $('#people-counter').text(data.length);
+                    $.each(data, function() {
+                        var person = this;
+                        
+                        var $li = $('<li>', {'class': 'arrow'}).data('person', person);
+                        var $a1 = $('<a/>', {'href': '#person-details'}).html(person.first_name + ' <strong>' + person.last_name + '</strong>');
+                        $a1.bind('click tap', function(e) {
+                            $('#person-details .photo-name img').attr('src', person.photo_thumb ? person.photo_thumb : '/media/img/person-dummy.png');
+                            $('#person-details .photo-name .name').text(person.first_name + ' ' + person.last_name);
+                            $('#person-details .email .value').text(person.email || ' ');
+                            $('#person-details .matric_no .value').text(person.matric_no || ' ');
+                            $('#person-details .zipcode .value').text(person.zipcode || ' ');
+                            $('#person-details .mobile_device .value').text(person.mobile_device || ' ');
+                            $('#person-details .computer_os .value').text(person.computer_os || ' ');
+                            $('#person-photo-container').css('background-image', 'url("' + person.photo + '")');
+                        });
+                        if (person.photo_mini) {
+                            var $img = $('<img/>', {'src': person.photo_mini});
+                            $a1.prepend($img);
+                        }
+                        $li.append($a1);
+                        $('#people-list').append($li);
+                        $('#people').data('data-available', true);
+                    });
+                },
+                'dataType': 'json'
+            });
+            
+            // POPULATE STATS DATA
+            $.ajax({
+                'url': '/people/stats/',
+                'type': 'GET',
+                'success': function(data) {
+                    var $devices_list = $('#stats-mobile-device ul.stats');
+                    $devices_list.html('');
+                    var devices_keys = [];
+                    var devices_values = [];
+                    $.each(data.mobile_device, function() {
+                        var $li = $('<li/>');
+                        var $a = $('<a/>', {'href': '#'});
+                        $a.text(this[0]);
+                        var $counter = $('<small/>', {'class': 'counter'});
+                        $counter.text(this[1]);
+                        $li.append($a).append($counter);
+                        $devices_list.append($li);
+                        devices_keys.push(this[0]);
+                        devices_values.push(this[1]);
+                    });
+                    var devices_chart_url = 'http://chart.apis.google.com/chart?chs=320x120&cht=p&chf=bg,s,65432100&chd=t:' + devices_values.join(',') + '&chl=' + devices_keys.join('|');
+                    $('#stats-mobile-device .canvas').html('<img src="' + devices_chart_url + '" />');
+
+                    var $os_list = $('#stats-computer-os ul.stats');
+                    $os_list.html('');
+                    var os_keys = [];
+                    var os_values = [];
+                    $.each(data.computer_os, function(key, value) {
+                        var $li = $('<li/>');
+                        var $a = $('<a/>', {'href': '#'});
+                        $a.text(this[0]);
+                        var $counter = $('<small/>', {'class': 'counter'});
+                        $counter.text(this[1]);
+                        $li.append($a).append($counter);
+                        $os_list.append($li);
+                        os_keys.push(this[0]);
+                        os_values.push(this[1]);
+                    });
+                    var os_chart_url = 'http://chart.apis.google.com/chart?chs=320x80&cht=p&chf=bg,s,65432100&chd=t:' + os_values.join(',') + '&chl=' + os_keys.join('|');
+                    $('#stats-computer-os .canvas').html('<img src="' + os_chart_url + '" />');
+                }
+            });
+            
+            // OTHER STUFF
+            $('#person-photo-container, #person-mapview').bind('touchmove', function(e) {
+                e.preventDefault();
+            });
+            $('li.email').bind('click tap', function(e) {
+                var email = $(this).find('.value').text();
+                if (email) window.location.replace('mailto:' + email);
+            });
+            $('li.zipcode').bind('click tap', function(e) {
+                var zipcode = $(this).find('.value').text();
+                $('#person-map-link').attr('href', 'http://maps.google.com/maps?q=' + zipcode + ',+Germany');
+                geocoder.geocode({'address': zipcode + ', Germany'}, function(result) {
+                    if (result[0]) {
+                        var latlng = result[0].geometry.location;
+                        var src = String('http://maps.google.com/staticmap?center=' + String(latlng.lat()) + '%2C' + String(latlng.lng()) + '&zoom=14&size=320x440&maptype=mobile&markers=' + String(latlng.lat()) + '%2C' + String(latlng.lng()));
+                        $('#person-map-link').html('<img src="' + src + '" />');
+                    }
+                });
+                jQT.goTo('#person-mapview', 'slideup');
+            });
+            $('#person-map-link').bind('click tap', function(e) {
+                e.preventDefault();
+                window.open($(this).attr('href'));
+            });
+            $('.close-map').bind('click', function(e) {
+                jQT.goBack(1);
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div id="jqt">
+        <div id="index" class="current">
+            <div class="toolbar">
+                <h1>Mobile Web Apps</h1>
+            </div>
+            <ul class="rounded">
+                <li class="arrow"><a href="#people">Kursteilnehmer</a><!-- <small class="counter" id="people-counter">0</small>--></li>
+                <li class="arrow"><a href="#stats">Statistiken</a></li>
+                <li class="arrow"><a href="#projects">Links</a></li>
+            </ul>
+            <div class="info" id="add-to-home-screen-hint">
+                <p>Add this page to your home screen to view the custom icon, startup screen, and full screen mode.</p>
+            </div>
+        </div>
+        
+        <div id="people">
+            <div class="toolbar">
+                <h1>Teilnehmer</h1>
+                <a class="back to-home" href="#">Zurück</a>
+            </div>
+            <ul class="edgetoedge" id="people-list"></ul>
+        </div>
+        
+        <div id="person-details">
+            <div class="toolbar">
+                <h1>Info</h1>
+                <a class="back" href="#">Zurück</a>
+            </div>
+            <div class="photo-name">
+                <a href="#person-photo" class="photo flip"><img src="#" alt="" /></a>
+                <div class="name"></div>
+            </div>
+            <ul class="rounded">
+                <li class="email">
+                    <label>E-Mail</label>
+                    <span class="value">&nbsp;</span>
+                </li>
+                <li class="matric_no">
+                    <label>Matrikelnr.</label>
+                    <span class="value">&nbsp;</span>
+                </li>
+                <li class="zipcode">
+                    <label>PLZ</label>
+                    <span class="value">&nbsp;</span>
+                </li>
+            </ul>
+            <ul class="rounded">
+                <li class="mobile_device">
+                    <label>Device</label>
+                    <span class="value">&nbsp;</span>
+                </li>
+                <li class="computer_os">
+                    <label>Betriebssystem</label>
+                    <span class="value">&nbsp;</span>
+                </li>
+            </ul>
+            
+        </div>
+        
+        <div id="person-photo">
+            <div class="toolbar">
+                <h1></h1>
+                <a class="back" href="#">Zurück</a>
+            </div>
+            <div id="person-photo-container"></div>
+        </div>
+        
+        <div id="person-mapview">
+            <div class="toolbar">
+                <h1>Karte</h1>
+                <a href="#" class="button close-map">Schließen</a>
+            </div>
+            <div id="person-map-container">
+                <a href="#" id="person-map-link"><img src="#" id="person-map-img" /></a>
+            </div>
+        </div>
+        
+        <div id="stats">
+            <div class="toolbar">
+                <h1>Statistiken</h1>
+                <a class="back" href="#">Zurück</a>
+            </div>
+            <ul class="rounded">
+                <li class="arrow"><a href="#stats-mobile-device">Devices</a></li>
+                <li class="arrow"><a href="#stats-computer-os">Betriebssystem</a></li>
+            </ul>
+        </div>
+        
+        <div id="stats-mobile-device">
+            <div class="toolbar">
+                <h1>Devices</h1>
+                <a class="back" href="#">Zurück</a>
+            </div>
+            <div class="canvas"></div>
+            <ul class="rounded stats">
+            </ul>
+        </div>
+        
+        <div id="stats-computer-os">
+            <div class="toolbar">
+                <h1>Betriebssystem</h1>
+                <a class="back" href="#">Zurück</a>
+            </div>
+            <div class="canvas"></div>
+            <ul class="rounded stats">
+            </ul>
+        </div>
+        
+    </div>
+</body>
+</html>
