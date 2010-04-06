@@ -95,7 +95,7 @@ INSTALLED_APPS = (
     'uni_form',
     
     # custom apps
-    'people',
+    'fhpmwa.people',
 )
 
 MIDDLEWARE_CLASSES = (
