@@ -114,7 +114,7 @@
                 geocoder.geocode({'address': zipcode + ', Germany'}, function(result) {
                     if (result[0]) {
                         var latlng = result[0].geometry.location;
-                        var src = String('http://maps.google.com/staticmap?center=' + String(latlng.lat()) + '%2C' + String(latlng.lng()) + '&zoom=14&size=320x440&maptype=mobile&markers=' + String(latlng.lat()) + '%2C' + String(latlng.lng()));
+                        var src = String('http://maps.google.com/staticmap?center=' + String(latlng.lat()) + '%2C' + String(latlng.lng()) + '&zoom=14&size=320x440&maptype=mobile&markers=' + String(latlng.lat()) + '%2C' + String(latlng.lng()) + '&key=ABQIAAAA6ygCBBg7_KkUnD-Dm0ZDVRQr0MiS1gqXj1IJINsc38dZxaED_BRFrbNnkRiFWYpBGIkN1HQ_GoYRNg');
                         $('#person-map-link').html('<img src="' + src + '" />');
                     }
                 });
