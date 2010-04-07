@@ -86,19 +86,19 @@ html {
 }
 
 #person-details .photo-name a.photo {
-    width: 75px;
-    height: 75px;
+    width: 77px;
+    height: 77px;
     display: block;
     float: left;
-    border: 1px solid rgba(0,0,0,0.5);
-    -webkit-border-radius: 6px;
-    border-radius: 6px;
     margin-right: 20px;
     overflow: hidden;
 }
 
 #person-details .photo-name img {
     background: #999;
+    border: 1px solid rgba(0,0,0,0.5);
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
 }
 
 #person-details .photo-name .name {
