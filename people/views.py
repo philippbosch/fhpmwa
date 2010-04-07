@@ -26,7 +26,7 @@ def people_list(request):
             'first_name': person.first_name,
             'last_name': person.last_name,
             'email': person.email,
-            'matric_no': person.get_profile().matric_no,
+            # 'matric_no': person.get_profile().matric_no,
             'zipcode': person.get_profile().zipcode,
             'mobile_device': person.get_profile().get_mobile_device(),
             'computer_os': person.get_profile().get_computer_os_display(),

@@ -29,7 +29,7 @@ COMPUTER_OS_CHOICES = (
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
-    matric_no = models.CharField(verbose_name=_("matric no."), max_length=20, blank=True)
+    # matric_no = models.CharField(verbose_name=_("matric no."), max_length=20, blank=True)
     zipcode = models.CharField(verbose_name=_("zip code"), max_length=5)
     photo = models.ImageField(verbose_name=_("photo"), upload_to="uploads/", blank=True)
     mobile_device = models.PositiveSmallIntegerField(verbose_name=_("mobile device"), choices=MOBILE_DEVICE_CHOICES, null=True)

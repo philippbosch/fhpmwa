@@ -39,7 +39,7 @@
                             $('#person-details .photo-name img').attr('src', person.photo_thumb ? person.photo_thumb : '/media/img/person-dummy.png');
                             $('#person-details .photo-name .name').text(person.first_name + ' ' + person.last_name);
                             $('#person-details .email .value').text(person.email || ' ');
-                            $('#person-details .matric_no .value').text(person.matric_no || ' ');
+                            // $('#person-details .matric_no .value').text(person.matric_no || ' ');
                             $('#person-details .zipcode .value').text(person.zipcode || ' ');
                             $('#person-details .mobile_device .value').text(person.mobile_device || ' ');
                             $('#person-details .computer_os .value').text(person.computer_os || ' ');
@@ -59,7 +59,7 @@
             
             // POPULATE STATS DATA
             $.ajax({
-                'url': '/people/stats/',
+                'url': '/stats/',
                 'type': 'GET',
                 'success': function(data) {
                     var $devices_list = $('#stats-mobile-device ul.stats');
@@ -171,10 +171,10 @@
                     <label>E-Mail</label>
                     <span class="value">&nbsp;</span>
                 </li>
-                <li class="matric_no">
-                    <label>Matrikelnr.</label>
-                    <span class="value">&nbsp;</span>
-                </li>
+                {# <li class="matric_no"> #}
+                {#     <label>Matrikelnr.</label> #}
+                {#     <span class="value">&nbsp;</span> #}
+                {# </li> #}
                 <li class="zipcode">
                     <label>PLZ</label>
                     <span class="value">&nbsp;</span>
