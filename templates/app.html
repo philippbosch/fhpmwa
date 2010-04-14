@@ -32,26 +32,31 @@
                     $('#people-counter').text(data.length);
                     $.each(data, function() {
                         var person = this;
-                        
+                        var $panel = $('#person-details').clone();
+                        var $panel_photo = $('#person-photo').clone();
+                        $panel.attr('id', 'person-details-' + person.id);
+                        $panel_photo.attr('id','person-photo-' + person.id);
                         var $li = $('<li>', {'class': 'arrow'}).data('person', person);
-                        var $a1 = $('<a/>', {'href': '#person-details'}).html(person.first_name + ' <strong>' + person.last_name + '</strong>');
-                        $a1.bind('click tap', function(e) {
-                            $('#person-details .photo-name img').attr('src', person.photo_thumb ? person.photo_thumb : '/media/img/person-dummy.png');
-                            $('#person-details .photo-name .name').text(person.first_name + ' ' + person.last_name);
-                            $('#person-details .email .value').text(person.email || ' ');
-                            // $('#person-details .matric_no .value').text(person.matric_no || ' ');
-                            $('#person-details .zipcode .value').text(person.zipcode || ' ');
-                            $('#person-details .mobile_device .value').text(person.mobile_device || ' ');
-                            $('#person-details .computer_os .value').text(person.computer_os || ' ');
-                            $('#person-photo-container').css('background-image', 'url("' + person.photo + '")');
-                        });
+                        var $a1 = $('<a/>', {'href': '#person-details-' + person.id}).html(person.first_name + ' <strong>' + person.last_name + '</strong>');
+                        
+                        $('.photo-name a.photo', $panel).attr('href', '#person-photo-' + person.id);
+                        $('.photo-name img', $panel).attr('src', person.photo_thumb ? person.photo_thumb : '/media/img/person-dummy.png');
+                        $('.photo-name .name', $panel).text(person.first_name + ' ' + person.last_name);
+                        $('.email .value', $panel).text(person.email || ' ');
+                        $('.zipcode .value', $panel).text(person.zipcode || ' ');
+                        $('.mobile_device .value', $panel).text(person.mobile_device || ' ');
+                        $('.computer_os .value', $panel).text(person.computer_os || ' ');
+                        $('.person-photo-container', $panel_photo).css('background-image', 'url("' + person.photo + '")');
+                        
                         if (person.photo_mini) {
                             var $img = $('<img/>', {'src': person.photo_mini});
                             $a1.prepend($img);
                         }
                         $li.append($a1);
                         $('#people-list').append($li);
-                        $('#people').data('data-available', true);
+                        
+                        $panel.appendTo('#jqt');
+                        $panel_photo.appendTo('#jqt');
                     });
                 },
                 'dataType': 'json'
@@ -157,7 +162,7 @@
             <ul class="edgetoedge" id="people-list"></ul>
         </div>
         
-        <div id="person-details">
+        <div id="person-details" class="person-details">
             <div class="toolbar">
                 <h1>Info</h1>
                 <a class="back" href="#">Zurück</a>
@@ -193,12 +198,12 @@
             
         </div>
         
-        <div id="person-photo">
+        <div id="person-photo" class="person-photo">
             <div class="toolbar">
                 <h1></h1>
                 <a class="back" href="#">Zurück</a>
             </div>
-            <div id="person-photo-container"></div>
+            <div class="person-photo-container"></div>
         </div>
         
         <div id="person-mapview">
