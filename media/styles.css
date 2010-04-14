@@ -1,0 +1,43 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+}
+
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    background: #FFF;
+    margin: 48px;
+}
+
+h1 {
+    font-size: 300%;
+}
+
+p {
+    line-height: 1.5;
+    margin: 14px 0;
+}
+
+#navigation {
+    margin: 24px 0;
+}
+
+ul {
+    list-style-type: none;
+    width: 200px;
+}
+
+li {
+    background-color: #aaa;
+    margin-bottom: 2px;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+a {
+    color: #090;
+    text-decoration: none;
+    font-weight: bold;
+}
