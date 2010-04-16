@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>LocalWeather</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" href="touch-icon.png">
+        <script type="text/javascript" src="jquery.min.js"></script>
+        <script type="text/javascript">
+            function update(e) {
+                console.log('update');
+                window.navigator.geolocation.getCurrentPosition(function(position) {
+                    updateWeather(position.coords);
+                }, function(e) {
+                    var coordsFallback = {'latitude': 52.5317432, 'longitude': 13.4272981};
+                    updateWeather(coordsFallback);
+                });
+            }
+            
+            $(document).ready(function() {
+                update();
+                $('#update').click(update);
+            });
+            
+            function updateWeather(coords) {
+                $.getJSON('http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20flickr.places%20where%20lat%3D%22' + coords.latitude + '%22%20and%20lon%3D%22' + coords.longitude + '%22&format=json&diagnostics=true&callback=?', function(data) {
+                    var place = data.query.results.places.place;
+                    var woeid = data.query.results.places.place.woeid;
+                    $.getJSON('http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D\'http%3A%2F%2Fweather.yahooapis.com%2Fforecastrss%3Fw%3D' + woeid + '%26u%3Dc\'&format=json&diagnostics=true&callback=?', function(data) {
+                        var condition = data.query.results.item.condition;
+                        var forecast = data.query.results.item.forecast;
+                        $('#place').text(place.name.replace(/,.*/,''));
+                        $('#condition').text(condition.temp + '°').css('background-image', 'url("img/' + condition.code + '.png")');
+                        $('#high').text('H: ' + forecast[0].high + '°');
+                        $('#low').text('T: ' + forecast[0].low + '°');
+                    });
+                });
+            }
+        </script>
+        <style type="text/css">
+            body {
+                background: #000;
+                color: #FFF;
+                font-family: "Helvetica Neue", Helvetica, sans-serif;
+                margin: 0;
+                padding: 20px;
+                text-shadow: #000 0px 1px 0px;
+            }
+            #place {
+                margin: 0 15px 10px 15px;
+                font-weight: bold;
+                font-size: 24px;
+            }
+            #weather {
+                background: #1670bc -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.7)), to(rgba(255,255,255,0)));
+                border: 4px solid #D6E5F2;
+                padding: 0 10px;
+                -webkit-border-radius: 20px;
+                -webkit-box-shadow: rgba(255,255,255,0.8) 0px 1px 16px;
+                position: relative;
+            }
+            #condition {
+                height: 128px;
+                background-position: center center;
+                background-repeat: no-repeat;
+                font-size: 400%;
+            }
+            #high-low {
+                position: absolute;
+                top: 0;
+                right: 10px;
+                text-align: right;
+                margin-top: 10px;
+                font-weight: bold;
+                font-size: 18px;
+            }
+            #low {
+                opacity: 0.4;
+            }
+            #update {
+                margin-top: 20px;
+                width: 100%;
+                /* -webkit-box-shadow: rgba(255,255,255,0.5) 0 0 6px; */
+                border: 0;
+                -webkit-border-radius: 10px;
+                height: 40px;
+                background: #1261a4 -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0)), color-stop(50%, rgba(0,0,0,0.3)), color-stop(50%, rgba(0,0,0,0.4)), to(rgba(0,0,0,0.5)));
+                font-size: 18px;
+                font-family: "Helvetica Neue", Helvetica, sans-serif;
+                font-weight: bold;
+                color: rgba(255,255,255,0.9);
+                text-shadow: #000 0px -1px 0px;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div id="place"></div>
+        <div id="weather">
+            <div id="condition"></div>
+            <div id="high-low"><div id="high"></div><div id="low"></div></div>
+        </div>
+        <button id="update">Update</button>
+    </body>
+</html>

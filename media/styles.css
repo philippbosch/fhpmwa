@@ -22,6 +22,8 @@ p {
 
 #navigation {
     margin: 24px 0;
+    float: left;
+    margin-right: 48px;
 }
 
 ul {
@@ -30,10 +32,12 @@ ul {
 }
 
 li {
-    background-color: #aaa;
-    margin-bottom: 2px;
+    background-color: yellow;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.7)), color-stop(50%, rgba(255,255,255,0.4)), color-stop(50%, rgba(255,255,255,0.1)), to(rgba(255,255,255,0)));
+    margin-bottom: 10px;
     padding: 8px;
     border-radius: 8px;
+    -webkit-box-shadow: rgba(0,0,0,0.5) 1px 1px 2px;
 }
 
 a {
@@ -41,3 +45,9 @@ a {
     text-decoration: none;
     font-weight: bold;
 }
+
+#content {
+    margin-top: 24px;
+}
+
+
